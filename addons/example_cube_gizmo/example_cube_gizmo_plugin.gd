@@ -72,8 +72,10 @@ func _set_handle(gizmo: EditorNode3DGizmo, handle_id: int, secondary: bool, came
 	
 	var ray_from = camera.project_ray_origin(screen_pos)
 	var ray_to = camera.project_ray_normal(screen_pos)
-	var drag_to = ray_from + ray_to * n.global_transform.origin.distance_to(ray_from)  # Project the ray onto the gizmo plane
-
+	var intersection = plane.intersects_ray(ray_from, ray_to)
+	
+	var drag_to = n.global_transform.affine_inverse() * intersection
+	
 	match handle_id:
 		0: n.extents.x = drag_to.x
 		1: n.extents.y = drag_to.y
